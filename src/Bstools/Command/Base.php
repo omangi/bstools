@@ -3,7 +3,7 @@
 namespace Bstools\Command;
 
 use Pheanstalk\Pheanstalk;
-use Pheanstalk\PheanstalkInterface;
+use Pheanstalk\Contract\PheanstalkInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
@@ -18,12 +18,15 @@ class Base extends Command
     }
 
     /**
-     * @param \Symfony\Component\Console\Input\InputInterface $input
+     * @param InputInterface $input
      * @return Pheanstalk
      */
     protected function createConnection(InputInterface $input)
     {
-        $pheanstalk = new Pheanstalk($input->getOption('host'), $input->getOption('port'));
-        return $pheanstalk;
+        return Pheanstalk::create(
+            $input->getOption('host'),
+            $input->getOption('port')
+
+        );
     }
 }

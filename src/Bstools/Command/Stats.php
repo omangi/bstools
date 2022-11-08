@@ -35,12 +35,18 @@ class Stats extends Base
             $rate = $input->getOption('refresh');
             while (true) {
                 $this->clearScreen();
-                $output->writeln($renderer->render($this->generateStatsTable($pheanstalk, $tube)));;
+                $output->writeln(
+                    $renderer->render(
+                        $this->generateStatsTable($pheanstalk, $tube)
+                    )
+                );
                 sleep($rate);
             }
         } else {
             $output->writeln($renderer->render($this->generateStatsTable($pheanstalk, $tube)));
         }
+
+        return self::SUCCESS;
     }
 
     private function clearScreen()

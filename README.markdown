@@ -19,3 +19,12 @@ Usage
 Note: if you are using a packaged executable, the command will be "bs". Otherwise, use bin/bs.php. /usr/bin/env is required (and needs to know the location of PHP) for the executable to work.
 
 running "bs" or "php bs.php" will produce command line help with all of the various options
+
+Docker
+-----
+````
+docker build -t php8cli .
+docker run -it --rm --mount type=bind,source="$(pwd)",target=/usr/src/app php8cli bash
+composer install
+./bin/bs stats --host=35.164.145.129 --renderer=raw
+````
