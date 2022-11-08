@@ -26,5 +26,5 @@ Docker
 docker build -t php8cli .
 docker run -it --rm --mount type=bind,source="$(pwd)",target=/usr/src/app php8cli bash
 composer install
-./bin/bs stats --host=35.164.145.129 --renderer=raw
+./bin/bs stats --host=127.0.0.1 --renderer=raw
 ````
