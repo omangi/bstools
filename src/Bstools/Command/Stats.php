@@ -2,6 +2,7 @@
 
 namespace Bstools\Command;
 
+use Bstools\Renderer\Metric;
 use Bstools\Renderer\Raw;
 use Bstools\Renderer\Table;
 use Pheanstalk\Pheanstalk;
@@ -12,7 +13,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class Stats extends Base
 {
-
     public function configure()
     {
         $this->setName('stats')
@@ -20,7 +20,13 @@ class Stats extends Base
         $this->addArgument('tube', InputArgument::OPTIONAL, 'the tube to show stats for');
         $this->addOption('monitor', 'm', InputOption::VALUE_NONE, 'monitor mode');
         $this->addOption('refresh', 'r', InputOption::VALUE_OPTIONAL, 'monitor refresh rate in seconds', 1);
-        $this->addOption('renderer', 'e', InputOption::VALUE_OPTIONAL, 'select a renderer (`table` or `raw`)', 'table');
+        $this->addOption(
+            'renderer',
+            'e',
+            InputOption::VALUE_OPTIONAL,
+            'select a renderer (`table`|`raw`|`metric`)',
+            'table'
+        );
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
@@ -43,7 +49,11 @@ class Stats extends Base
                 sleep($rate);
             }
         } else {
-            $output->writeln($renderer->render($this->generateStatsTable($pheanstalk, $tube)));
+            $output->writeln(
+                $renderer->render(
+                    $this->generateStatsTable($pheanstalk, $tube)
+                )
+            );
         }
 
         return self::SUCCESS;
@@ -86,17 +96,15 @@ class Stats extends Base
     }
 
     /**
-     * @param \Symfony\Component\Console\Input\InputInterface $input
-     *
-     * @return \Bstools\Renderer\RendererInterface
+     * @param InputInterface $input
+     * @return Metric|Raw|Table
      */
     private function getRenderer(InputInterface $input)
     {
-        switch ($input->getOption('renderer')) {
-            case 'raw':
-                return new Raw();
-        }
-
-        return new Table();
+        return match ($input->getOption('renderer')) {
+            'raw' => new Raw(),
+            'metric' => new Metric(),
+            'table' => new Table(),
+        };
     }
 }

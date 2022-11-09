@@ -21,5 +21,7 @@ class Tubes extends Base
         foreach ($tubes as $tube) {
             $output->writeln("<info>$tube</info>");
         }
+
+        return self::SUCCESS;
     }
 }
